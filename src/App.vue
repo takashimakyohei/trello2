@@ -2,9 +2,9 @@
   <div id="app>">
     <div class="container">
       <div>
-        <h3>notstarted</h3>
-        <draggable :list="notstarted" group="tasks" @end="save()">
-          <div v-for="todo in notstarted" :key="todo.no">
+        <h3>notStarted</h3>
+        <draggable :list="notStarted" group="tasks" @end="save()">
+          <div v-for="todo in notStarted" :key="todo.no">
             {{ todo.name }}
             <button @click="removeNotStarted(todo)">削除</button>
           </div>
@@ -12,19 +12,25 @@
             type="text"
             v-if="addflag"
             v-model="newtodo"
-            @keyup.enter="addNotStarted"
+            @keyup.enter="addnotStarted"
           />
           <button v-else @click="changeflag">TODO追加</button>
         </draggable>
       </div>
       <div>
-        <h3>inprogress</h3>
-        <draggable :list="inprogress" group="tasks" @end="save()">
-          <div v-for="todo in inprogress" :key="todo.no">
+        <h3>inProgress</h3>
+        <draggable :list="inProgress" group="tasks" @end="save()">
+          <div v-for="todo in inProgress" :key="todo.no">
             {{ todo.name }}
             <button @click="removeInProgless(todo)">削除</button>
           </div>
-          <input type="text" v-model="newtodo" @keyup.enter="addInProgress" />
+          <input
+            type="text"
+            v-if="addflag"
+            v-model="newtodo2"
+            @keyup.enter="addinProgress"
+          />
+          <button v-else @click="changeflag">TODO追加</button>
         </draggable>
       </div>
       <div>
@@ -34,7 +40,13 @@
             {{ todo.name }}
             <button @click="removePending(todo)">削除</button>
           </div>
-          <input type="text" v-model="newtodo" @keyup.enter="addPending" />
+          <input
+            type="text"
+            v-if="addflag"
+            v-model="newtodo3"
+            @keyup.enter="addPending"
+          />
+          <button v-else @click="changeflag">TODO追加</button>
         </draggable>
       </div>
       <div>
@@ -44,7 +56,13 @@
             {{ todo.name }}
             <button @click="removeDone(todo)">削除</button>
           </div>
-          <input type="text" v-model="newtodo" @keyup.enter="addDone" />
+          <input
+            type="text"
+            v-model="newtodo4"
+            @keyup.enter="addDone"
+            v-if="addflag"
+          />
+          <button v-else @click="changeflag">TODO追加</button>
         </draggable>
       </div>
     </div>
@@ -57,65 +75,72 @@ export default {
   data() {
     return {
       newtodo: '',
+      newtodo2: '',
+      newtodo3: '',
+      newtodo4: '',
       addflag: false,
       uid: 0,
-      notstarted: [],
-      inprogress: [],
+      notStarted: [],
+      inProgress: [],
       pending: [],
       done: [],
     };
   },
   mounted() {
     if (
-      localStorage.getItem('notstarted') &&
-      localStorage.getItem('inprogress') &&
+      localStorage.getItem('notStarted') &&
+      localStorage.getItem('inProgress') &&
       localStorage.getItem('pending') &&
       localStorage.getItem('done')
     ) {
       try {
-        this.notstarted = JSON.parse(localStorage.getItem('notstarted'));
-        this.inprogress = JSON.parse(localStorage.getItem('inprogress'));
+        this.notStarted = JSON.parse(localStorage.getItem('notStarted'));
+        this.inProgress = JSON.parse(localStorage.getItem('inProgress'));
         this.pending = JSON.parse(localStorage.getItem('pending'));
         this.done = JSON.parse(localStorage.getItem('done'));
       } catch (e) {
-        localStorage.removeItem('notstarted');
-        localStorage.removeItem('inprogress');
+        localStorage.removeItem('notStarted');
+        localStorage.removeItem('inProgress');
         localStorage.removeItem('pending');
         localStorage.removeItem('done');
       }
     }
   },
   methods: {
-    addNotStarted() {
-      this.notstarted.push({ id: this.uid++, name: this.newtodo, listno: '1' });
+    addnotStarted() {
+      this.notStarted.push({ id: this.uid++, name: this.newtodo, listno: '1' });
       this.addflag = false;
       this.newtodo = '';
       this.save();
     },
-    addInProgress() {
-      this.inprogress.push({ id: this.uid++, name: this.newtodo, listno: '2' });
+    addinProgress() {
+      this.inProgress.push({
+        id: this.uid++,
+        name: this.newtodo2,
+        listno: '2',
+      });
       this.addflag = false;
-      this.newtodo = '';
+      this.newtodo2 = '';
       this.save();
     },
     addPending() {
-      this.pending.push({ id: this.uid++, name: this.newtodo, listno: '3' });
+      this.pending.push({ id: this.uid++, name: this.newtodo3, listno: '3' });
       this.addflag = false;
-      this.newtodo = '';
+      this.newtodo3 = '';
       this.save();
     },
     addDone() {
-      this.done.push({ id: this.uid, name: this.newtodo, listno: '4' });
+      this.done.push({ id: this.uid, name: this.newtodo4, listno: '4' });
       this.addflag = false;
-      this.newtodo = '';
+      this.newtodo4 = '';
       this.save();
     },
     removeNotStarted(todo) {
-      this.notstarted.splice(this.notstarted.indexOf(todo), 1);
+      this.notStarted.splice(this.notStarted.indexOf(todo), 1);
       this.save();
     },
     removeInProgless(todo) {
-      this.inprogress.splice(this.inprogress.indexOf(todo), 1);
+      this.inProgress.splice(this.inProgress.indexOf(todo), 1);
       this.save();
     },
     removePending(todo) {
@@ -130,10 +155,10 @@ export default {
       this.addflag = true;
     },
     save() {
-      const a = JSON.stringify(this.inprogress);
-      localStorage.setItem('inprogress', a);
-      const b = JSON.stringify(this.notstarted);
-      localStorage.setItem('notstarted', b);
+      const a = JSON.stringify(this.inProgress);
+      localStorage.setItem('inProgress', a);
+      const b = JSON.stringify(this.notStarted);
+      localStorage.setItem('notStarted', b);
       const c = JSON.stringify(this.pending);
       localStorage.setItem('pending', c);
       const d = JSON.stringify(this.done);
