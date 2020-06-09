@@ -1,4 +1,4 @@
 module.exports = {
-  publicPath: '/vue_trello_prototype/',
+  publicPath: '/trello2/',
   outputDir: 'docs',
 };
