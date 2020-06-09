@@ -1,48 +1,31 @@
 <template>
   <div>
-    <h3>notstarted</h3>
-
-    <!-- <draggable :list="notstarted" group="tasks" @end="save()"> -->
-    <div v-for="todo in notstarted" :key="todo.no">
-      {{ todo.name }}
-      <button @click="removeNotStarted(todo)">削除</button>
-    </div>
+    <h3>aaaa</h3>
+    {{ todo.name }}
+    <button @click="removenotstarted">削除</button>
     <input
       type="text"
       v-if="addflag"
-      v-model="this.$store.state.newtodo"
-      @keyup.enter="addNotStarted"
+      v-model="newtodo"
+      @keyup.enter="addnotstarted"
     />
     <button v-else @click="changeflag">TODO追加</button>
-    <!-- </draggable> -->
   </div>
 </template>
-
 <script>
 export default {
-  computed: {
-    notstarted() {
-      return this.$store.state.notstarted;
-    },
-    addflag() {
-      return this.$store.state.addflag;
-    },
-  },
+  props: ['addflag', 'todo', 'newtodo'],
   methods: {
-    save() {
-      this.$store.commit('save');
-    },
-    removeNotStarted(todo) {
-      this.$store.commit('removeNotStarted', todo);
-    },
-    addNotStarted() {
-      this.$store.commit('addNotStarted');
-    },
     changeflag() {
-      this.$store.commit('changeflag');
+      this.$emit('changeflag');
+    },
+    addnotstarted() {
+      this.$emit('addnotstarted');
+    },
+    removenotstarted() {
+      this.$emit('removenotstarted');
     },
   },
 };
 </script>
-
 <style></style>

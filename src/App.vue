@@ -1,26 +1,39 @@
 <template>
   <div id="app>">
     <div class="container">
-      <div>
+      <div class="card">
         <h3>notStarted</h3>
         <draggable :list="notStarted" group="tasks" @end="save()">
-          <div v-for="todo in notStarted" :key="todo.no">
+          <div class="todos" v-for="todo in notStarted" :key="todo.no">
             {{ todo.name }}
-            <button @click="removeNotStarted(todo)">削除</button>
+            <button @click="removenotstarted(todo)">削除</button>
           </div>
           <input
             type="text"
             v-if="addflag"
             v-model="newtodo"
-            @keyup.enter="addnotStarted"
+            @keyup.enter="addnotstarted"
           />
-          <button v-else @click="changeflag">TODO追加</button>
+
+          <button class="button" v-else @click="changeflag">TODO追加</button>
         </draggable>
       </div>
-      <div>
+
+      <!-- <not-started
+        @changeflag="changeflag"
+        @removenotstarted="removenotstarted"
+        @addnotstarted="addnotstarted"
+        :addflag="addflag"
+        :newtodo="newtodo"
+        v-bind:todo="todo"
+        v-for="todo in notStarted"
+        :key="todo.no"
+      /> -->
+
+      <div class="card pink">
         <h3>inProgress</h3>
         <draggable :list="inProgress" group="tasks" @end="save()">
-          <div v-for="todo in inProgress" :key="todo.no">
+          <div class="todos" v-for="todo in inProgress" :key="todo.no">
             {{ todo.name }}
             <button @click="removeInProgless(todo)">削除</button>
           </div>
@@ -30,13 +43,14 @@
             v-model="newtodo2"
             @keyup.enter="addinProgress"
           />
-          <button v-else @click="changeflag">TODO追加</button>
+          <button class="button" v-else @click="changeflag">TODO追加</button>
         </draggable>
       </div>
-      <div>
+
+      <div class="card">
         <h3>pending</h3>
         <draggable :list="pending" group="tasks" @end="save()">
-          <div v-for="todo in pending" :key="todo.no">
+          <div class="todos" v-for="todo in pending" :key="todo.no">
             {{ todo.name }}
             <button @click="removePending(todo)">削除</button>
           </div>
@@ -46,13 +60,14 @@
             v-model="newtodo3"
             @keyup.enter="addPending"
           />
-          <button v-else @click="changeflag">TODO追加</button>
+          <button class="button" v-else @click="changeflag">TODO追加</button>
         </draggable>
       </div>
-      <div>
+
+      <div class="card">
         <h3>done</h3>
         <draggable :list="done" group="tasks" @end="save()">
-          <div v-for="todo in done" :key="todo.no">
+          <div class="todos" v-for="todo in done" :key="todo.no">
             {{ todo.name }}
             <button @click="removeDone(todo)">削除</button>
           </div>
@@ -62,15 +77,15 @@
             @keyup.enter="addDone"
             v-if="addflag"
           />
-          <button v-else @click="changeflag">TODO追加</button>
+          <button class="button" v-else @click="changeflag">TODO追加</button>
         </draggable>
       </div>
     </div>
   </div>
 </template>
-
 <script>
 import draggable from 'vuedraggable';
+// import NotStarted from './components/NotStarted';
 export default {
   data() {
     return {
@@ -107,7 +122,7 @@ export default {
     }
   },
   methods: {
-    addnotStarted() {
+    addnotstarted() {
       this.notStarted.push({ id: this.uid++, name: this.newtodo, listno: '1' });
       this.addflag = false;
       this.newtodo = '';
@@ -135,7 +150,7 @@ export default {
       this.newtodo4 = '';
       this.save();
     },
-    removeNotStarted(todo) {
+    removenotstarted(todo) {
       this.notStarted.splice(this.notStarted.indexOf(todo), 1);
       this.save();
     },
@@ -167,12 +182,28 @@ export default {
   },
   components: {
     draggable,
+    // NotStarted,
   },
 };
 </script>
-
 <style>
 .container {
   display: flex;
+  justify-content: space-around;
+}
+.card {
+  text-align: center;
+  background-color: gray;
+}
+.todos {
+  padding: 15px;
+  border: 0.5px solid rgb(72, 63, 63);
+}
+.button {
+  margin: 10px;
+}
+h3 {
+  width: 220px;
+  font-size: 35px;
 }
 </style>
